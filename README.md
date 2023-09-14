@@ -92,3 +92,14 @@ CREATE TABLE `user` (
   PRIMARY KEY (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 ```
+
+```sql
+CREATE TABLE `business_code` (
+  `userId` int NOT NULL,
+  `businessCode` varchar(8) NOT NULL UNIQUE,
+  PRIMARY KEY (`userId`),
+  CONSTRAINT `FK_UserId` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+```
