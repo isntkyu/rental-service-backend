@@ -1,6 +1,10 @@
-import { Column, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { User } from './user.entity';
 
+@Entity({
+  name: 'business_code',
+  database: 'rental',
+})
 export class BusinessCode {
   @Column({
     unique: true,

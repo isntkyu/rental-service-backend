@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
+  Entity,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -14,6 +15,10 @@ export enum UserType {
   ADMIN = 'admin',
 }
 
+@Entity({
+  database: 'rental',
+  name: 'user',
+})
 export class User {
   @PrimaryGeneratedColumn({
     type: 'int',
