@@ -97,9 +97,40 @@ CREATE TABLE `user` (
 CREATE TABLE `business_code` (
   `userId` int NOT NULL,
   `businessCode` varchar(8) NOT NULL UNIQUE,
+  `createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deletedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`userId`),
-  CONSTRAINT `FK_UserId` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+```
+
+```sql
+CREATE TABLE IF NOT EXISTS product (
+  `serialNumber` VARCHAR(10) NOT NULL,
+  `productType` VARCHAR(55) NOT NULL,
+  `createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deletedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`serialNumber`),
+  UNIQUE KEY (`serialNumber`)
+);
+```
+
+```sql
+
+CREATE TABLE IF NOT EXISTS rental (
+  rentalId INT AUTO_INCREMENT PRIMARY KEY,
+  rentalDate DATETIME NOT NULL,
+  returnDate DATETIME,
+  serialNumber VARCHAR(10) NOT NULL,
+  productType VARCHAR(55) NOT NULL,
+  status INT NOT NULL,
+  rentalUserId INT NOT NULL,
+  rentalUserEmail VARCHAR(255) NOT NULL,
+  businessUserId INT NOT NULL,
+  price INT,
+  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletedAt DATETIME DEFAULT
+);
 ```

@@ -3,39 +3,36 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinColumn,
-  OneToOne,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from './user.entity';
+
+export enum PRODUCT_TYPE {
+  PRO = '유니버셜 프로 & 미니',
+  LIGHT = '유니버셜 라이트',
+}
 
 @Entity({
-  name: 'business_code',
   database: 'rental',
+  name: 'product',
 })
-export class BusinessCode {
+export class Product {
   @Column({
     unique: true,
-    type: 'int',
     nullable: false,
-    name: 'userId',
-  })
-  userId: number;
-
-  @Column({
-    unique: true,
     type: 'varchar',
-    length: 8,
-    nullable: false,
-    name: 'businessCode',
+    length: 10,
+    name: 'serialNumber',
   })
-  businessCode: string;
+  serialNumber: string;
 
-  @OneToOne(() => User, (user) => user.businessCode)
-  @JoinColumn({
-    name: 'userId',
+  @Column({
+    unique: false,
+    nullable: false,
+    type: 'varchar',
+    length: 55,
+    name: 'productType',
   })
-  user?: User;
+  productType: PRODUCT_TYPE;
 
   @CreateDateColumn({
     type: 'datetime',
