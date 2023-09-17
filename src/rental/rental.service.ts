@@ -1,26 +1,32 @@
-import { Injectable } from '@nestjs/common';
-import { CreateRentalDto } from './dto/create-rental.dto';
-import { UpdateRentalDto } from './dto/update-rental.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { RentalListReqDto } from './dto/list.dto';
+import { Rental, RENTAL_STATUS } from './entities/rental.entity';
+import { Repository } from 'typeorm';
+import { RENTAL_REPOSITORY } from '../constants';
 
 @Injectable()
 export class RentalService {
-  create(createRentalDto: CreateRentalDto) {
-    return 'This action adds a new rental';
-  }
+  constructor(
+    @Inject(RENTAL_REPOSITORY)
+    private readonly rentalRepository: Repository<Rental>,
+  ) {}
 
-  findAll() {
-    return `This action returns all rental`;
-  }
+  async getRentals(rentalListReqDto: RentalListReqDto, status: RENTAL_STATUS) {
+    const { rentalMonth, order } = rentalListReqDto;
 
-  findOne(id: number) {
-    return `This action returns a #${id} rental`;
-  }
+    const qb = this.rentalRepository
+      .createQueryBuilder('r')
+      .where('r.status = :status', { status })
+      .orderBy('r.rentalId', order);
 
-  update(id: number, updateRentalDto: UpdateRentalDto) {
-    return `This action updates a #${id} rental`;
-  }
+    if (rentalMonth != null) {
+      qb.andWhere("DATE_FORMAT(r.rentalDate, '%Y-%m') = :rentalMonth", {
+        rentalMonth,
+      });
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} rental`;
+    const rentals: Rental[] = await qb.getMany();
+
+    return rentals;
   }
 }

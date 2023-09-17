@@ -1,5 +1,4 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { USER_REPOSITORY } from '../constants';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -22,21 +21,5 @@ export class UserService {
     }
 
     return user;
-  }
-
-  findAll() {
-    return `This action returns all user`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 }

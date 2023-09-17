@@ -5,6 +5,7 @@ import {
   Entity,
   JoinColumn,
   OneToOne,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
@@ -14,7 +15,7 @@ import { User } from './user.entity';
   database: 'rental',
 })
 export class BusinessCode {
-  @Column({
+  @PrimaryColumn({
     unique: true,
     type: 'int',
     nullable: false,

@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -16,7 +17,7 @@ export enum PRODUCT_TYPE {
   name: 'product',
 })
 export class Product {
-  @Column({
+  @PrimaryColumn({
     unique: true,
     nullable: false,
     type: 'varchar',
