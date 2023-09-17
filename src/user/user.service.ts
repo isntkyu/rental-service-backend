@@ -1,9 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { USER_REPOSITORY } from '../constants';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { LoginReqDto } from './dto/login.dto';
 
 @Injectable()
 export class UserService {
@@ -12,8 +12,16 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async login(loginReqDto: LoginReqDto) {
+    const user = await this.userRepository.findOne({
+      where: loginReqDto,
+    });
+
+    if (user == null) {
+      throw new UnauthorizedException('로그인 실패');
+    }
+
+    return user;
   }
 
   findAll() {
