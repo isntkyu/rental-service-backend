@@ -38,20 +38,23 @@ export class Product {
   @CreateDateColumn({
     type: 'datetime',
     name: 'createdAt',
-    default: () => 'CURRENT_TIMESTAMP',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP(6)',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
     type: 'datetime',
     name: 'updatedAt',
-    default: () => 'CURRENT_TIMESTAMP',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP(6)',
   })
   updatedAt: Date;
 
   @DeleteDateColumn({
     type: 'datetime',
     name: 'deletedAt',
+    nullable: true,
     default: null,
   })
   deletedAt: Date | null;

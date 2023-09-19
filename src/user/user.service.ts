@@ -1,14 +1,33 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { USER_REPOSITORY } from '../constants';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { User, UserType } from './entities/user.entity';
 import { LoginReqDto } from './dto/login.dto';
+import { RentalService } from '../rental/rental.service';
+import { Rental, RENTAL_STATUS } from '../rental/entities/rental.entity';
+import { ORDER } from '../rental/dto/list.dto';
+import { BusinessCode } from './entities/business-code.entity';
+
+export interface BusinessUser extends User {
+  businessCode: BusinessCode;
+}
+
+export interface UserWithRentalList extends User {
+  businessCode: BusinessCode;
+  rentalList: Rental[];
+}
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: Repository<User>,
+    private readonly rentalService: RentalService,
   ) {}
 
   async login(loginReqDto: LoginReqDto) {
@@ -21,5 +40,43 @@ export class UserService {
     }
 
     return user;
+  }
+
+  async getUser(userId: number) {
+    return await this.userRepository.findOne({
+      where: { userId },
+    });
+  }
+
+  async getUserWithRentalInfo(userId: number) {
+    return await this.userRepository.findOne({
+      where: { userId },
+      relations: {
+        rental: true,
+      },
+    });
+  }
+
+  async getUserWithRentalList(userId: number): Promise<UserWithRentalList> {
+    const user = await this.userRepository.findOne({
+      where: { userId },
+      relations: {
+        businessCode: true,
+      },
+    });
+
+    if (user == null || user.userType !== UserType.BUSINESS) {
+      throw new NotFoundException();
+    }
+
+    const rentalList = await this.rentalService.getRentals(
+      { rentalMonth: null, order: ORDER.DESC },
+      RENTAL_STATUS.PAID,
+    );
+
+    return {
+      ...(user as BusinessUser),
+      rentalList,
+    };
   }
 }

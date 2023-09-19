@@ -14,6 +14,7 @@ export const databaseProviders = [
         database: 'rental',
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: true,
+        logging: true,
       });
 
       return dataSource.initialize();

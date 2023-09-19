@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { BusinessCode } from './business-code.entity';
+import { Rental } from '../../rental/entities/rental.entity';
 
 export enum UserType {
   GENERAL = 'general',
@@ -61,24 +62,30 @@ export class User {
   @CreateDateColumn({
     type: 'datetime',
     name: 'createdAt',
-    default: () => 'CURRENT_TIMESTAMP',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP(6)',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
     type: 'datetime',
     name: 'updatedAt',
-    default: () => 'CURRENT_TIMESTAMP',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP(6)',
   })
   updatedAt: Date;
 
   @DeleteDateColumn({
     type: 'datetime',
     name: 'deletedAt',
+    nullable: true,
     default: null,
   })
   deletedAt: Date | null;
 
   @OneToOne(() => BusinessCode, (businessCode) => businessCode.user)
   businessCode?: BusinessCode;
+
+  @OneToOne(() => Rental, (rental) => rental.rentalUser)
+  rental?: Rental | null;
 }

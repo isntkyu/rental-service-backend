@@ -3,10 +3,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { PRODUCT_TYPE } from './product.entity';
+import { User } from '../../user/entities/user.entity';
 
 export enum RENTAL_STATUS {
   RENTAL = 100,
@@ -96,21 +99,30 @@ export class Rental {
   @CreateDateColumn({
     type: 'datetime',
     name: 'createdAt',
-    default: () => 'CURRENT_TIMESTAMP',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP(6)',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
     type: 'datetime',
     name: 'updatedAt',
-    default: () => 'CURRENT_TIMESTAMP',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP(6)',
   })
   updatedAt: Date;
 
   @DeleteDateColumn({
     type: 'datetime',
     name: 'deletedAt',
+    nullable: true,
     default: null,
   })
   deletedAt: Date | null;
+
+  @OneToOne(() => User, (user) => user.rental)
+  @JoinColumn({
+    name: 'rentalUserId',
+  })
+  rentalUser?: User;
 }
