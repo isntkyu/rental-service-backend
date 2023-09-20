@@ -1,6 +1,5 @@
 import { PRODUCT_TYPE } from '../entities/product.entity';
 import { IsEnum, IsInt, IsNotEmpty, IsString } from 'class-validator';
-import { Type } from 'class-transformer';
 
 export class CreateRentalDto {
   @IsNotEmpty()
@@ -13,7 +12,6 @@ export class CreateRentalDto {
   productType: PRODUCT_TYPE;
 
   @IsNotEmpty()
-  @Type(() => Number)
   @IsInt()
   rentalUserId: number;
 

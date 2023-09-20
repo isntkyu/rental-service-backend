@@ -90,6 +90,14 @@ export class Rental {
   businessUserId: number;
 
   @Column({
+    type: 'varchar',
+    length: 8,
+    nullable: false,
+    name: 'businessCode',
+  })
+  businessCode: string;
+
+  @Column({
     nullable: true,
     type: 'int',
     name: 'price',

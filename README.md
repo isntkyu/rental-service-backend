@@ -122,6 +122,7 @@ CREATE TABLE IF NOT EXISTS rental (
   rentalUserId INT NOT NULL,
   rentalUserEmail VARCHAR(255) NOT NULL,
   businessUserId INT NOT NULL,
+  businessCode    varchar(8) not null,
   price INT,
   createdAt DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL ,
   updatedAt DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) NOT NULL ,

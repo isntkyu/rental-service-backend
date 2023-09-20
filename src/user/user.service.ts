@@ -49,12 +49,18 @@ export class UserService {
   }
 
   async getUserWithRentalInfo(userId: number) {
-    return await this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: { userId },
       relations: {
         rental: true,
       },
     });
+
+    if (user == null) {
+      throw new NotFoundException();
+    }
+
+    return user;
   }
 
   async getUserWithRentalList(userId: number): Promise<UserWithRentalList> {

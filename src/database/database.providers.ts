@@ -13,7 +13,7 @@ export const databaseProviders = [
         password: '1234',
         database: 'rental',
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        synchronize: true,
+        // synchronize: true,
         logging: true,
       });
 

@@ -23,8 +23,10 @@ export class RentalListItem {
   email: string;
   rentalPeriod: string;
   productType: PRODUCT_TYPE;
+  rentalId: number;
 
   constructor(rental: Rental) {
+    this.rentalId = rental.rentalId;
     this.email = rental.rentalUserEmail;
     this.rentalPeriod =
       format(rental.rentalDate, 'yyyy.MM.dd') +
