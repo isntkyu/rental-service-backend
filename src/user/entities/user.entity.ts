@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -86,6 +87,6 @@ export class User {
   @OneToOne(() => BusinessCode, (businessCode) => businessCode.user)
   businessCode?: BusinessCode;
 
-  @OneToOne(() => Rental, (rental) => rental.rentalUser)
-  rental?: Rental | null;
+  @OneToMany(() => Rental, (rental) => rental.rentalUser)
+  rentals?: Rental[];
 }

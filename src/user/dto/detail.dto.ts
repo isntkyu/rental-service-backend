@@ -36,19 +36,19 @@ export class GeneralUserDetailResDto {
     this.email = user.email;
     this.name = user.name;
     this.rentalInfo =
-      user.rental == null || user.rental?.status === RENTAL_STATUS.PAID
+      user.rentals[0] == null || user.rentals[0]?.status === RENTAL_STATUS.PAID
         ? null
         : {
-            status: user.rental.status,
-            rentalId: user.rental.rentalId,
-            serialNumber: user.rental.serialNumber,
-            businessCode: user.rental.businessCode,
-            rentalDate: format(user.rental.rentalDate, 'yyyy.MM.dd'),
+            status: user.rentals[0].status,
+            rentalId: user.rentals[0].rentalId,
+            serialNumber: user.rentals[0].serialNumber,
+            businessCode: user.rentals[0].businessCode,
+            rentalDate: format(user.rentals[0].rentalDate, 'yyyy.MM.dd'),
             returnDate:
-              user.rental.returnDate == null
+              user.rentals[0].returnDate == null
                 ? ''
-                : format(user.rental.returnDate, 'yyyy.MM.dd'),
-            price: user.rental.price,
+                : format(user.rentals[0].returnDate, 'yyyy.MM.dd'),
+            price: user.rentals[0].price,
           };
   }
 }

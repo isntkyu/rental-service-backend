@@ -52,7 +52,7 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { userId },
       relations: {
-        rental: true,
+        rentals: true,
       },
     });
 

@@ -4,7 +4,7 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -128,7 +128,7 @@ export class Rental {
   })
   deletedAt: Date | null;
 
-  @OneToOne(() => User, (user) => user.rental)
+  @ManyToOne(() => User, (user) => user.rentals)
   @JoinColumn({
     name: 'rentalUserId',
   })
