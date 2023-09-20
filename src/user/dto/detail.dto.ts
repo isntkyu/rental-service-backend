@@ -36,7 +36,7 @@ export class GeneralUserDetailResDto {
     this.email = user.email;
     this.name = user.name;
     this.rentalInfo =
-      user.rental.status === RENTAL_STATUS.PAID
+      user.rental == null || user.rental?.status === RENTAL_STATUS.PAID
         ? null
         : {
             status: user.rental.status,

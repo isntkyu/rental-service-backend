@@ -18,7 +18,10 @@ import * as path from 'path';
     },
   );
 })()
-  .then((result) => console.log(result))
+  .then((result) => {
+    console.log(result);
+    process.exit(1);
+  })
   .catch((err) => {
     console.error(err);
   });

@@ -24,6 +24,12 @@ export default class UserSeeder implements Seeder {
         userType: UserType.GENERAL,
         password: 'general@2',
       },
+      {
+        email: 'user2@email.com',
+        name: '사용자B',
+        userType: UserType.GENERAL,
+        password: 'general@2',
+      },
     ]);
   }
 }
