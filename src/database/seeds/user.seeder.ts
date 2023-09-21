@@ -1,10 +1,14 @@
 import { Seeder } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
 import { User, UserType } from '../../user/entities/user.entity';
+import { Rental } from '../../rental/entities/rental.entity';
 
 export default class UserSeeder implements Seeder {
   async run(dataSource: DataSource): Promise<any> {
     const repository = dataSource.getRepository(User);
+    const rentalRepository = dataSource.getRepository(Rental);
+    await rentalRepository.clear();
+    await repository.clear();
     await repository.insert([
       {
         email: 'businessUser@email.com',
