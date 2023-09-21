@@ -139,6 +139,7 @@ export class RentalService {
     const qb = this.rentalRepository
       .createQueryBuilder('r')
       .where('r.status = :status', { status })
+      .andWhere('r.returnDate IS NOT NUll')
       .orderBy('r.rentalId', order === ORDER.ASC ? 'ASC' : 'DESC');
 
     if (rentalMonth != null) {
