@@ -12,7 +12,7 @@ import { User } from './user.entity';
 
 @Entity({
   name: 'business_code',
-  database: 'rental',
+  database: 'rental_web',
 })
 export class BusinessCode {
   @PrimaryColumn({

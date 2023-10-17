@@ -13,7 +13,7 @@ export enum PRODUCT_TYPE {
 }
 
 @Entity({
-  database: 'rental',
+  database: 'rental_web',
   name: 'product',
 })
 export class Product {

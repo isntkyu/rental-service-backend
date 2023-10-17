@@ -18,7 +18,7 @@ export enum UserType {
 }
 
 @Entity({
-  database: 'rental',
+  database: 'rental_web',
   name: 'user',
 })
 export class User {

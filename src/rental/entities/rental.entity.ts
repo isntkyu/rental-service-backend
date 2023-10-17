@@ -19,7 +19,7 @@ export enum RENTAL_STATUS {
 }
 
 @Entity({
-  database: 'rental',
+  database: 'rental_web',
   name: 'rental',
 })
 export class Rental {
