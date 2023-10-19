@@ -9,16 +9,16 @@ import { Rental, RENTAL_STATUS } from './entities/rental.entity';
 import { Repository } from 'typeorm';
 import {
   BUSINESS_CODE_REPOSITORY,
-  PRODUCT_REPOSITORY,
+  HOUSING_REG_INFO_REPOSITORY,
   RENTAL_REPOSITORY,
   USER_REPOSITORY,
 } from '../constants';
 import { CreateRentalDto } from './dto/create.dto';
 import { BusinessCode } from '../user/entities/business-code.entity';
-import { Product } from './entities/product.entity';
 import { User } from '../user/entities/user.entity';
 import { ReturnDto } from './dto/return.dto';
 import { PaymentDto } from './dto/payment.dto';
+import { HousingRegInfo } from './entities/housing-reg-info.entity';
 
 @Injectable()
 export class RentalService {
@@ -29,14 +29,56 @@ export class RentalService {
     private readonly rentalRepository: Repository<Rental>,
     @Inject(BUSINESS_CODE_REPOSITORY)
     private readonly businessCodeRepository: Repository<BusinessCode>,
-    @Inject(PRODUCT_REPOSITORY)
-    private readonly productRepository: Repository<Product>,
+    @Inject(HOUSING_REG_INFO_REPOSITORY)
+    private readonly housingRegInfoRepository: Repository<HousingRegInfo>,
   ) {}
+
+  async approve(rentalId) {
+    await this.rentalRepository.update(
+      {
+        rentalId,
+      },
+      {
+        status: RENTAL_STATUS.RETURNED,
+      },
+    );
+  }
+
+  async finish(rentalId) {
+    await this.rentalRepository.update(
+      {
+        rentalId,
+      },
+      {
+        status: RENTAL_STATUS.FINISH,
+      },
+    );
+  }
 
   async createRental(createRentalDto: CreateRentalDto) {
     const { rentalUserId, businessCode, serialNumber, productType } =
       createRentalDto;
 
+    const rentalData = await this.rentalRepository.findOne({
+      where: {
+        rentalUserId,
+        status: RENTAL_STATUS.RENTAL,
+      },
+    });
+    if (rentalData != null) {
+      throw new BadRequestException('중복 렌탈할 수 없습니다.');
+    }
+
+    const regInfo = await this.housingRegInfoRepository.findOne({
+      where: {
+        serialNumber,
+        status: 'REGISTERED',
+      },
+    });
+
+    if (regInfo == null) {
+      throw new BadRequestException('등록되지 않은 시리얼번호 입니다.');
+    }
     const user = await this.userRepository.findOne({
       where: { userId: rentalUserId },
     });
@@ -47,25 +89,22 @@ export class RentalService {
 
     const businessCodeEntity = await this.businessCodeRepository.findOne({
       where: { businessCode },
+      relations: {
+        user: true,
+      },
     });
 
     if (businessCodeEntity == null) {
       throw new NotFoundException('businessCode');
     }
 
-    const product = await this.productRepository.findOne({
-      where: { serialNumber, productType },
-    });
-
-    if (product == null) {
-      throw new NotFoundException('product');
-    }
-
     const rental = new Rental();
     rental.rentalDate = new Date();
     rental.returnDate = null;
-    rental.serialNumber = product.serialNumber;
-    rental.productType = product.productType;
+    rental.businessCode = businessCodeEntity.businessCode;
+    rental.businessName = businessCodeEntity.user.name;
+    rental.serialNumber = serialNumber;
+    rental.productType = '유니버셜 프로 & 미니';
     rental.rentalUserId = user.userId;
     rental.rentalUserEmail = user.email;
     rental.businessUserId = businessCodeEntity.userId;
@@ -87,6 +126,17 @@ export class RentalService {
       throw new BadRequestException();
     }
 
+    const regInfo = await this.housingRegInfoRepository.findOne({
+      where: {
+        serialNumber: rental.serialNumber,
+        status: 'NONE',
+      },
+    });
+
+    if (regInfo == null) {
+      throw new BadRequestException('해지를 먼저 진행해주세요.');
+    }
+
     await this.rentalRepository.update(
       {
         rentalId,
@@ -94,16 +144,16 @@ export class RentalService {
       {
         returnDate: new Date(),
         price: 200,
-        status: RENTAL_STATUS.RETURNED,
+        status: RENTAL_STATUS.RETURN_REQUEST,
       },
     );
   }
 
   async pay(paymentDto: PaymentDto) {
-    const { rentalId } = paymentDto;
+    const { rentalId, depositer } = paymentDto;
 
     const rental = await this.rentalRepository.findOne({
-      where: { rentalId, status: RENTAL_STATUS.RETURNED },
+      where: { rentalId, status: RENTAL_STATUS.RETURN_REQUEST },
     });
 
     if (rental == null) {
@@ -115,7 +165,7 @@ export class RentalService {
         rentalId,
       },
       {
-        status: RENTAL_STATUS.PAID,
+        depositer: depositer,
       },
     );
   }
@@ -133,19 +183,21 @@ export class RentalService {
     }
   }
 
-  async getRentals(rentalListReqDto: RentalListReqDto, status: RENTAL_STATUS) {
-    const { rentalMonth, order } = rentalListReqDto;
+  async getRentals(rentalListReqDto: RentalListReqDto) {
+    const { rentalMonth, order, searchBusinessName } = rentalListReqDto;
 
     const qb = this.rentalRepository
       .createQueryBuilder('r')
-      .where('r.status = :status', { status })
-      .andWhere('r.returnDate IS NOT NUll')
       .orderBy('r.rentalId', order === ORDER.ASC ? 'ASC' : 'DESC');
 
     if (rentalMonth != null) {
       qb.andWhere("DATE_FORMAT(r.rentalDate, '%Y-%m') = :rentalMonth", {
         rentalMonth,
       });
+    }
+
+    if (searchBusinessName != null && searchBusinessName != '') {
+      qb.andWhere(`r.businessName like '%${searchBusinessName}%'`);
     }
 
     const rentals: Rental[] = await qb.getMany();

@@ -8,14 +8,15 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { PRODUCT_TYPE } from './product.entity';
 import { User } from '../../user/entities/user.entity';
 
 export enum RENTAL_STATUS {
   RENTAL = 100,
   RETURNED = 200,
+  RETURN_REQUEST = 201,
   PAID = 300,
   SETTLED = 400,
+  FINISH = 500,
 }
 
 @Entity({
@@ -58,7 +59,7 @@ export class Rental {
     length: 55,
     name: 'productType',
   })
-  productType: PRODUCT_TYPE;
+  productType: string;
 
   @Column({
     name: 'status',
@@ -83,6 +84,21 @@ export class Rental {
   rentalUserEmail: string;
 
   @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: true,
+    name: 'depositer',
+  })
+  depositer: string | null;
+
+  @Column({
+    type: 'varchar',
+    length: 200,
+    nullable: true,
+  })
+  businessName: string | null;
+
+  @Column({
     name: 'businessUserId',
     type: 'int',
     nullable: false,
@@ -95,7 +111,7 @@ export class Rental {
     nullable: false,
     name: 'businessCode',
   })
-  businessCode: string;
+  businessCode: string | null;
 
   @Column({
     nullable: true,

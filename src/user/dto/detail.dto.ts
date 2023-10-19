@@ -36,7 +36,14 @@ export class GeneralUserDetailResDto {
     this.userId = user.userId;
     this.email = user.email;
     this.name = user.name;
-    const sortedRentals = sortBy(user.rentals, ['rentalId']).reverse();
+    const sortedRentals = sortBy(user.rentals, ['rentalId'])
+      .reverse()
+      .filter(
+        (item) =>
+          item.status === RENTAL_STATUS.RENTAL ||
+          item.status === RENTAL_STATUS.RETURN_REQUEST ||
+          item.status === RENTAL_STATUS.RETURNED,
+      );
 
     this.rentalInfo =
       sortedRentals[0] == null ||
@@ -47,11 +54,11 @@ export class GeneralUserDetailResDto {
             rentalId: sortedRentals[0].rentalId,
             serialNumber: sortedRentals[0].serialNumber,
             businessCode: sortedRentals[0].businessCode,
-            rentalDate: format(sortedRentals[0].rentalDate, 'yyyy.MM.dd'),
+            rentalDate: format(sortedRentals[0].rentalDate, 'yyyy.MM.dd HH:mm'),
             returnDate:
               sortedRentals[0].returnDate == null
                 ? ''
-                : format(sortedRentals[0].returnDate, 'yyyy.MM.dd'),
+                : format(sortedRentals[0].returnDate, 'yyyy.MM.dd HH:mm'),
             price: sortedRentals[0].price,
           };
   }

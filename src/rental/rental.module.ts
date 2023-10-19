@@ -4,8 +4,8 @@ import { RentalController } from './rental.controller';
 import { rentalProviders } from './rental.provider';
 import { DatabaseModule } from '../database/database.module';
 import { userProviders } from '../user/user.provider';
-import { productProviders } from './product.provider';
 import { businessCodeProviders } from '../user/business-code.provider';
+import { housingRegInfoProviders } from './housing-reg-info.provider';
 
 @Module({
   imports: [DatabaseModule],
@@ -13,8 +13,8 @@ import { businessCodeProviders } from '../user/business-code.provider';
   providers: [
     ...rentalProviders,
     ...userProviders,
-    ...productProviders,
     ...businessCodeProviders,
+    ...housingRegInfoProviders,
     RentalService,
   ],
   exports: [RentalService],

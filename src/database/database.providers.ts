@@ -7,10 +7,6 @@ export const databaseProviders = [
     useFactory: async () => {
       const dataSource = new DataSource({
         type: 'mysql',
-
-        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        // synchronize: true,
-        logging: true,
       });
 
       return dataSource.initialize();

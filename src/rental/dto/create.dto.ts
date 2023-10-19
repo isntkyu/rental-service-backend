@@ -1,5 +1,4 @@
-import { PRODUCT_TYPE } from '../entities/product.entity';
-import { IsEnum, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateRentalDto {
   @IsNotEmpty()
@@ -8,8 +7,7 @@ export class CreateRentalDto {
 
   @IsNotEmpty()
   @IsString()
-  @IsEnum(PRODUCT_TYPE)
-  productType: PRODUCT_TYPE;
+  productType: string;
 
   @IsNotEmpty()
   @IsInt()

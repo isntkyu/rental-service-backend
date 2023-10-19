@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 import { User, UserType } from './entities/user.entity';
 import { LoginReqDto } from './dto/login.dto';
 import { RentalService } from '../rental/rental.service';
-import { Rental, RENTAL_STATUS } from '../rental/entities/rental.entity';
+import { Rental } from '../rental/entities/rental.entity';
 import { ORDER } from '../rental/dto/list.dto';
 import { BusinessCode } from './entities/business-code.entity';
 
@@ -75,10 +75,10 @@ export class UserService {
       throw new NotFoundException();
     }
 
-    const rentalList = await this.rentalService.getRentals(
-      { rentalMonth: null, order: ORDER.DESC },
-      RENTAL_STATUS.PAID,
-    );
+    const rentalList = await this.rentalService.getRentals({
+      rentalMonth: null,
+      order: ORDER.DESC,
+    });
 
     return {
       ...(user as BusinessUser),
